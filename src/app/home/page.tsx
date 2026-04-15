@@ -1,135 +1,123 @@
 "use client";
-import { useState } from "react";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Logo } from "@/components/ui/Logo";
 import { BubbleChart } from "@/components/home/BubbleChart";
 import { RecommendationCard } from "@/components/home/RecommendationCard";
-import { mockStats, mockRecommendations, mockProfile } from "@/lib/mockData";
+import { AddContentModal } from "@/components/layout/AddContentModal";
+import { useUserStore } from "@/store/useUserStore";
+import { useStatsStore } from "@/store/useStatsStore";
+import { useContentStore } from "@/store/useContentStore";
 
 const PERIOD_OPTIONS = [
   { label: "오늘", value: 1 },
-  { label: "7일", value: 7 },
+  { label: "7일",  value: 7 },
   { label: "30일", value: 30 },
 ];
 
 export default function HomePage() {
-  const router = useRouter();
   const [selectedDays, setSelectedDays] = useState(7);
   const [showAll, setShowAll] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const topCategory = mockStats.byCategory[0];
-  const bottomCategory = mockStats.byCategory[mockStats.byCategory.length - 1];
+  const { name, fetchProfile } = useUserStore();
+  const { totalCount, byCategory, fetchStats } = useStatsStore();
+  const { recommendations, fetchRecommendations } = useContentStore();
 
-  const visibleRecs = showAll ? mockRecommendations : mockRecommendations.slice(0, 3);
+  useEffect(() => {
+    fetchProfile();
+    fetchStats();
+    fetchRecommendations();
+  }, []);
+
+  const top    = byCategory[0];
+  const bottom = byCategory[byCategory.length - 1];
+  const visibleRecs = showAll ? recommendations : recommendations.slice(0, 4);
 
   return (
     <AppLayout>
-      {/* 앱바 */}
-      <header className="sticky top-0 bg-white z-40 border-b border-gray-50">
-        <div className="flex items-center justify-between px-4 py-3">
-          <Logo height={26} />
-          <button
-            onClick={() => router.push("/onboarding/url")}
-            className="w-8 h-8 rounded-full bg-[#FF7E64] flex items-center justify-center shadow-sm shadow-[#FF7E64]/40"
-          >
-            <Plus size={18} className="text-white" strokeWidth={2.5} />
-          </button>
-        </div>
-      </header>
-
-      <div className="px-4 py-4 space-y-5">
-        {/* 인사말 + 기간 필터 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[13px] text-gray-400">안녕하세요!</p>
-            <h2 className="text-base font-bold text-[#111827]">{mockProfile.name}님의 콘텐츠 분석</h2>
-          </div>
-          <div className="flex items-center gap-1 bg-gray-100 rounded-full p-0.5">
-            {PERIOD_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setSelectedDays(opt.value)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                  selectedDays === opt.value
-                    ? "bg-white text-[#FF7E64] shadow-sm font-semibold"
-                    : "text-gray-400"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* 버블 차트 */}
+      {/* 페이지 헤더 */}
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h3 className="text-sm font-semibold text-[#111827] mb-3">카테고리 분포</h3>
-          <div className="flex justify-center">
-            <BubbleChart data={mockStats.byCategory} />
-          </div>
+          <p className="text-sm text-gray-400 mb-0.5">안녕하세요!</p>
+          <h1 className="text-2xl font-bold text-[#111827]">{name}님의 콘텐츠 분석</h1>
         </div>
-
-        {/* 통계 카드 */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* 많이 본 카테고리 */}
-          <div className="bg-[#FFEFEC] rounded-2xl p-4">
-            <p className="text-[11px] text-[#FF7E64] font-medium mb-1">가장 많이 본 분야</p>
-            <div className="flex items-end gap-1">
-              <span className="text-2xl font-black text-[#FF7E64]">{topCategory?.percentage}%</span>
-            </div>
-            <p className="text-sm font-bold text-[#111827] mt-1">{topCategory?.category}</p>
-            <span className="inline-block mt-2 px-2 py-0.5 bg-[#FF7E64] text-white rounded-full text-[10px] font-medium">
-              {topCategory?.count}개
-            </span>
-          </div>
-
-          {/* 적게 본 카테고리 */}
-          <div className="bg-gray-50 rounded-2xl p-4">
-            <p className="text-[11px] text-gray-400 font-medium mb-1">가장 적게 본 분야</p>
-            <div className="flex items-end gap-1">
-              <span className="text-2xl font-black text-gray-600">{bottomCategory?.percentage}%</span>
-            </div>
-            <p className="text-sm font-bold text-[#111827] mt-1">{bottomCategory?.category}</p>
-            <span className="inline-block mt-2 px-2 py-0.5 bg-gray-200 text-gray-500 rounded-full text-[10px] font-medium">
-              {bottomCategory?.count}개
-            </span>
-          </div>
+        <div className="flex items-center gap-1 bg-white rounded-full p-1 shadow-sm border border-gray-100">
+          {PERIOD_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setSelectedDays(opt.value)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                selectedDays === opt.value
+                  ? "bg-[#FF7E64] text-white shadow-sm"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* 전체 카테고리 바 */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-4">
-          <h3 className="text-sm font-semibold text-[#111827] mb-3">
-            전체 <span className="text-[#FF7E64]">{mockStats.totalCount}개</span> 콘텐츠
-          </h3>
-          <div className="space-y-2.5">
-            {mockStats.byCategory.map((item, i) => (
-              <div key={item.category}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-gray-600">{item.category}</span>
-                  <span className="text-xs font-semibold text-gray-700">{item.percentage}%</span>
+      {/* 상단 통계 카드 4개 */}
+      <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="bg-white rounded-2xl p-5 border border-gray-100">
+          <p className="text-xs text-gray-400 mb-1">전체 콘텐츠</p>
+          <p className="text-3xl font-black text-[#111827]">{totalCount}</p>
+          <p className="text-xs text-gray-400 mt-1">개 분석됨</p>
+        </div>
+        <div className="bg-[#FFEFEC] rounded-2xl p-5">
+          <p className="text-xs text-[#FF7E64] mb-1">최다 카테고리</p>
+          <p className="text-xl font-black text-[#FF7E64]">{top?.category}</p>
+          <p className="text-xs text-[#FF7E64]/70 mt-1">{top?.percentage}% · {top?.count}개</p>
+        </div>
+        <div className="bg-white rounded-2xl p-5 border border-gray-100">
+          <p className="text-xs text-gray-400 mb-1">최소 카테고리</p>
+          <p className="text-xl font-black text-[#111827]">{bottom?.category}</p>
+          <p className="text-xs text-gray-400 mt-1">{bottom?.percentage}% · {bottom?.count}개</p>
+        </div>
+        <div className="bg-white rounded-2xl p-5 border border-gray-100">
+          <p className="text-xs text-gray-400 mb-1">공유한 URL</p>
+          <p className="text-3xl font-black text-[#111827]">{totalCount}</p>
+          <p className="text-xs text-gray-400 mt-1">개 등록됨</p>
+        </div>
+      </div>
+
+      {/* 메인 2컬럼 */}
+      <div className="grid grid-cols-[1fr_340px] gap-6 mb-8">
+        {/* 왼쪽: 버블 차트 + 카테고리 바 */}
+        <div className="space-y-5">
+          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-[#111827] mb-5">카테고리 분포</h2>
+            <BubbleChart data={byCategory} />
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-100 p-6">
+            <h2 className="text-base font-semibold text-[#111827] mb-4">카테고리별 비율</h2>
+            <div className="space-y-3">
+              {byCategory.map((item) => (
+                <div key={item.category} className="flex items-center gap-4">
+                  <span className="text-sm text-gray-600 w-20 shrink-0">{item.category}</span>
+                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-[#FF7E64] transition-all duration-700"
+                      style={{ width: `${item.percentage}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-700 w-10 text-right shrink-0">
+                    {item.percentage}%
+                  </span>
                 </div>
-                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${item.percentage}%`,
-                      backgroundColor: `rgba(251,113,84,${1 - i * 0.15})`,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* 추천 콘텐츠 */}
-        <div>
-          <h3 className="text-sm font-semibold text-[#111827] mb-3">
+        {/* 오른쪽: 추천 콘텐츠 */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col">
+          <h2 className="text-base font-semibold text-[#111827] mb-4">
             맞춤 추천 콘텐츠 <span className="text-[#FF7E64]">✨</span>
-          </h3>
-          <div className="space-y-3">
+          </h2>
+          <div className="space-y-3 flex-1">
             {visibleRecs.map((rec) => (
               <RecommendationCard
                 key={rec.source.contentId}
@@ -138,17 +126,18 @@ export default function HomePage() {
               />
             ))}
           </div>
-
-          {!showAll && mockRecommendations.length > 3 && (
+          {!showAll && recommendations.length > 4 && (
             <button
               onClick={() => setShowAll(true)}
-              className="mt-3 w-full py-3 rounded-xl border border-[#FF7E64] text-[#FF7E64] text-sm font-medium hover:bg-[#FFEFEC] transition-colors"
+              className="mt-4 w-full py-2.5 rounded-xl border border-[#FF7E64] text-[#FF7E64] text-sm font-medium hover:bg-[#FFEFEC] transition-colors"
             >
-              추천 콘텐츠 더보기
+              더보기
             </button>
           )}
         </div>
       </div>
+
+      {showModal && <AddContentModal onClose={() => setShowModal(false)} />}
     </AppLayout>
   );
 }

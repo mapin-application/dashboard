@@ -37,33 +37,33 @@ export function Calendar({
   for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
 
   return (
-    <div className="bg-white rounded-2xl p-4">
+    <div className="bg-white rounded-2xl p-8">
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-8">
         <button
           onClick={() => onMonthChange(-1)}
-          className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
         >
-          <ChevronLeft size={18} className="text-gray-500" />
+          <ChevronLeft size={20} className="text-gray-500" />
         </button>
-        <span className="text-sm font-semibold text-[#111827]">
+        <span className="text-xl font-bold text-[#111827]">
           {year}년 {month + 1}월
         </span>
         <button
           onClick={() => onMonthChange(1)}
-          className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
         >
-          <ChevronRight size={18} className="text-gray-500" />
+          <ChevronRight size={20} className="text-gray-500" />
         </button>
       </div>
 
-      {/* 요일 */}
-      <div className="grid grid-cols-7 mb-2">
+      {/* 요일 헤더 */}
+      <div className="grid grid-cols-7 mb-1">
         {DAYS.map((day, i) => (
           <div
             key={day}
             className={clsx(
-              "text-center text-[11px] font-medium py-1",
+              "text-center text-sm font-semibold py-3",
               i === 0 ? "text-red-400" : i === 6 ? "text-blue-400" : "text-gray-400"
             )}
           >
@@ -73,9 +73,9 @@ export function Calendar({
       </div>
 
       {/* 날짜 그리드 */}
-      <div className="grid grid-cols-7 gap-y-1">
+      <div className="grid grid-cols-7">
         {cells.map((date, i) => {
-          if (!date) return <div key={`empty-${i}`} />;
+          if (!date) return <div key={`empty-${i}`} className="aspect-square" />;
 
           const dateStr = toDateString(date);
           const hasContent = datesWithContent.has(dateStr);
@@ -88,24 +88,23 @@ export function Calendar({
               key={dateStr}
               onClick={() => onDateSelect(date)}
               className={clsx(
-                "relative flex flex-col items-center justify-center h-9 rounded-lg text-[12px] font-medium transition-all",
-                isSelected && "bg-[#FFEFEC]",
-                !isSelected && "hover:bg-gray-50",
-                col === 0 ? "text-red-400" : col === 6 ? "text-blue-400" : "text-[#111827]",
-                isSelected && "text-[#FF7E64]"
+                "relative flex flex-col items-center justify-center aspect-square rounded-xl text-sm font-medium transition-all",
+                isSelected && "bg-[#FF7E64] text-white",
+                !isSelected && isToday && "bg-[#FFEFEC] text-[#FF7E64]",
+                !isSelected && !isToday && "hover:bg-gray-50",
+                !isSelected && !isToday && col === 0 && "text-red-400",
+                !isSelected && !isToday && col === 6 && "text-blue-400",
+                !isSelected && !isToday && col > 0 && col < 6 && "text-[#111827]",
               )}
             >
               {date.getDate()}
               {hasContent && (
                 <span
                   className={clsx(
-                    "absolute bottom-1 w-1 h-1 rounded-full",
-                    isSelected ? "bg-[#FF7E64]" : "bg-red-400"
+                    "absolute bottom-1.5 w-1.5 h-1.5 rounded-full",
+                    isSelected ? "bg-white/70" : "bg-[#FF7E64]"
                   )}
                 />
-              )}
-              {isToday && !isSelected && (
-                <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#FF7E64]" />
               )}
             </button>
           );
