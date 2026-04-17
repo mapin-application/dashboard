@@ -3,11 +3,23 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "MAPIN",
-  description: "내가 본 콘텐츠를 분석하고 추천받으세요",
+  description: "내가 본 콘텐츠를 분석하고 새로운 관점을 추천받으세요",
   icons: {
     icon: "/logo.svg",
     shortcut: "/logo.svg",
     apple: "/logo.svg",
+  },
+  openGraph: {
+    title: "MAPIN",
+    description: "내가 본 콘텐츠를 분석하고 새로운 관점을 추천받으세요",
+    siteName: "MAPIN",
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MAPIN",
+    description: "내가 본 콘텐츠를 분석하고 새로운 관점을 추천받으세요",
   },
 };
 
