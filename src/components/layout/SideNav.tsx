@@ -2,14 +2,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User, Plus } from "lucide-react";
+import { Home, Search, User, Plus } from "lucide-react";
 import { clsx } from "clsx";
 import { Logo } from "@/components/ui/Logo";
 import { AddContentModal } from "@/components/layout/AddContentModal";
 
 const navItems = [
-  { href: "/home",   icon: Home, label: "홈" },
-  { href: "/mypage", icon: User, label: "마이페이지" },
+  { href: "/home",   icon: Home,   label: "홈" },
+  { href: "/search", icon: Search, label: "검색" },
+  { href: "/mypage", icon: User,   label: "마이페이지" },
 ];
 
 export function SideNav() {

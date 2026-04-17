@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User } from "lucide-react";
+import { Home, Search, User } from "lucide-react";
 import { clsx } from "clsx";
 
 const navItems = [
-  { href: "/home", icon: Home, label: "홈" },
-  { href: "/mypage", icon: User, label: "마이페이지" },
+  { href: "/home",   icon: Home,   label: "홈" },
+  { href: "/search", icon: Search, label: "검색" },
+  { href: "/mypage", icon: User,   label: "마이페이지" },
 ];
 
 export function BottomNav() {
