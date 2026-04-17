@@ -35,9 +35,10 @@ export function Calendar({
   const cells: (Date | null)[] = [];
   for (let i = 0; i < firstDay; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, month, d));
+  while (cells.length < 42) cells.push(null); // 항상 6주
 
   return (
-    <div className="bg-white rounded-2xl p-8">
+    <div className="h-full p-8 flex flex-col">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-8">
         <button
@@ -73,9 +74,9 @@ export function Calendar({
       </div>
 
       {/* 날짜 그리드 */}
-      <div className="grid grid-cols-7">
+      <div className="grid grid-cols-7 flex-1 content-start">
         {cells.map((date, i) => {
-          if (!date) return <div key={`empty-${i}`} className="aspect-square" />;
+          if (!date) return <div key={`empty-${i}`} className="h-16" />;
 
           const dateStr = toDateString(date);
           const hasContent = datesWithContent.has(dateStr);
@@ -88,7 +89,7 @@ export function Calendar({
               key={dateStr}
               onClick={() => onDateSelect(date)}
               className={clsx(
-                "relative flex flex-col items-center justify-center aspect-square rounded-xl text-sm font-medium transition-all",
+                "relative flex flex-col items-center justify-center h-16 rounded-xl text-sm font-medium transition-all",
                 isSelected && "bg-[#FF7E64] text-white",
                 !isSelected && isToday && "bg-[#FFEFEC] text-[#FF7E64]",
                 !isSelected && !isToday && "hover:bg-gray-50",

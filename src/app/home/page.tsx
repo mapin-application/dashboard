@@ -29,9 +29,10 @@ export default function HomePage() {
     fetchRecommendations();
   }, []);
 
-  const top    = byCategory[0];
-  const bottom = byCategory[byCategory.length - 1];
   const pct = (count: number) => totalCount > 0 ? Math.round((count / totalCount) * 100) : 0;
+  const byCategoryWithPct = byCategory.map((item) => ({ ...item, percentage: pct(item.count) }));
+  const top    = byCategoryWithPct[0];
+  const bottom = byCategoryWithPct[byCategoryWithPct.length - 1];
   const visibleRecs = showAll ? recommendations : recommendations.slice(0, 4);
 
   return (
@@ -89,13 +90,13 @@ export default function HomePage() {
         <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <h2 className="text-base font-semibold text-[#111827] mb-5">카테고리 분포</h2>
-            <BubbleChart data={byCategory} />
+            <BubbleChart data={byCategoryWithPct} />
           </div>
 
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <h2 className="text-base font-semibold text-[#111827] mb-4">카테고리별 비율</h2>
             <div className="space-y-3">
-              {byCategory.map((item) => (
+              {byCategoryWithPct.map((item) => (
                 <div key={item.category} className="flex items-center gap-4">
                   <span className="text-sm text-gray-600 w-20 shrink-0">{item.category}</span>
                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -114,11 +115,11 @@ export default function HomePage() {
         </div>
 
         {/* 오른쪽: 추천 콘텐츠 */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col">
-          <h2 className="text-base font-semibold text-[#111827] mb-4">
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col max-h-[700px]">
+          <h2 className="text-base font-semibold text-[#111827] mb-4 flex-shrink-0">
             맞춤 추천 콘텐츠 <span className="text-[#FF7E64]">✨</span>
           </h2>
-          <div className="space-y-3 flex-1">
+          <div className="space-y-3 overflow-y-auto flex-1 min-h-0">
             {visibleRecs.map((rec) => (
               <RecommendationCard
                 key={rec.source.contentId}
@@ -127,12 +128,12 @@ export default function HomePage() {
               />
             ))}
           </div>
-          {!showAll && recommendations.length > 4 && (
+          {recommendations.length > 4 && (
             <button
-              onClick={() => setShowAll(true)}
-              className="mt-4 w-full py-2.5 rounded-xl border border-[#FF7E64] text-[#FF7E64] text-sm font-medium hover:bg-[#FFEFEC] transition-colors"
+              onClick={() => setShowAll(!showAll)}
+              className="mt-4 flex-shrink-0 w-full py-2.5 rounded-xl border border-gray-200 text-gray-400 text-sm font-medium hover:border-[#FF7E64] hover:text-[#FF7E64] hover:bg-[#FFEFEC] transition-colors"
             >
-              더보기
+              {showAll ? "접기" : `더보기 (${recommendations.length - 4}개)`}
             </button>
           )}
         </div>
