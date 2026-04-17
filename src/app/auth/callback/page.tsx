@@ -1,13 +1,13 @@
 "use client";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { handleOAuthCallback, useAuthStore } from "@/store/useAuthStore";
 
-export default function AuthCallbackPage() {
+function CallbackHandler() {
   const router = useRouter();
   const params = useSearchParams();
-  const { loginWithWebOAuth, isNewUser } = useAuthStore();
+  const { loginWithWebOAuth } = useAuthStore();
 
   useEffect(() => {
     const code = params.get("code");
@@ -32,12 +32,19 @@ export default function AuthCallbackPage() {
     }
   }, [params, router, loginWithWebOAuth]);
 
+  return null;
+}
+
+export default function AuthCallbackPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F4F5F7]">
       <div className="flex flex-col items-center gap-3">
         <Loader2 size={32} className="text-[#FF7E64] animate-spin" />
         <p className="text-sm text-gray-400">로그인 처리 중...</p>
       </div>
+      <Suspense>
+        <CallbackHandler />
+      </Suspense>
     </div>
   );
 }
