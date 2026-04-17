@@ -31,6 +31,7 @@ export default function HomePage() {
 
   const top    = byCategory[0];
   const bottom = byCategory[byCategory.length - 1];
+  const pct = (count: number) => totalCount > 0 ? Math.round((count / totalCount) * 100) : 0;
   const visibleRecs = showAll ? recommendations : recommendations.slice(0, 4);
 
   return (
@@ -67,13 +68,13 @@ export default function HomePage() {
         </div>
         <div className="bg-[#FFEFEC] rounded-2xl p-5">
           <p className="text-xs text-[#FF7E64] mb-1">최다 카테고리</p>
-          <p className="text-xl font-black text-[#FF7E64]">{top?.category}</p>
-          <p className="text-xs text-[#FF7E64]/70 mt-1">{top?.percentage}% · {top?.count}개</p>
+          <p className="text-xl font-black text-[#FF7E64]">{top?.category ?? <span className="text-[#FF7E64]/40">—</span>}</p>
+          <p className="text-xs text-[#FF7E64]/70 mt-1">{top ? `${pct(top.count)}% · ${top.count}개` : <span className="text-[#FF7E64]/30 font-bold">데이터 없음</span>}</p>
         </div>
         <div className="bg-white rounded-2xl p-5 border border-gray-100">
           <p className="text-xs text-gray-400 mb-1">최소 카테고리</p>
-          <p className="text-xl font-black text-[#111827]">{bottom?.category}</p>
-          <p className="text-xs text-gray-400 mt-1">{bottom?.percentage}% · {bottom?.count}개</p>
+          <p className="text-xl font-black text-[#111827]">{bottom?.category ?? <span className="text-gray-300">—</span>}</p>
+          <p className="text-xs text-gray-400 mt-1">{bottom ? `${pct(bottom.count)}% · ${bottom.count}개` : <span className="text-gray-300 font-bold">데이터 없음</span>}</p>
         </div>
         <div className="bg-white rounded-2xl p-5 border border-gray-100">
           <p className="text-xs text-gray-400 mb-1">공유한 URL</p>

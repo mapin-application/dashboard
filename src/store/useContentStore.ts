@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { api } from "@/lib/api";
+import { useStatsStore } from "@/store/useStatsStore";
 
 export interface ContentItem {
+  id: number;
   category: string;
   title: string;
   platform: string;
@@ -28,6 +30,12 @@ export interface RecommendationEntry {
     thumbnailUrl?: string;
   };
   recommendations: RecommendItem[];
+}
+
+type ContentType = "YOUTUBE" | "NAVER_NEWS" | "ARTICLE";
+
+function toPlatform(contentType: ContentType): string {
+  return contentType === "YOUTUBE" ? "YouTube" : "뉴스";
 }
 
 interface ContentState {
@@ -59,19 +67,32 @@ export const useContentStore = create<ContentState>()((set, get) => ({
       if (params.type)     query.set("type", params.type);
 
       const qs = query.toString();
-      const data = await api.get<{ content: ContentItem[] }>(
-        `/users/me/analyses${qs ? `?${qs}` : ""}`
-      );
+      const items = await api.get<Array<{
+        id: number;
+        contentId: string;
+        title: string;
+        contentType: ContentType;
+        category: string;
+        analyzedDates: string[];
+        thumbnailUrl?: string;
+      }>>(`/users/me/analyses${qs ? `?${qs}` : ""}`);
 
-      // 날짜별로 그룹화
       const byDate: Record<string, ContentItem[]> = {};
-      for (const item of data.content ?? []) {
-        const date = item.date?.slice(0, 10) ?? "";
+      for (const item of items ?? []) {
+        const date = item.analyzedDates?.[0]?.slice(0, 10) ?? "";
         if (!byDate[date]) byDate[date] = [];
-        byDate[date].push(item);
+        byDate[date].push({
+          id: item.id,
+          contentId: item.contentId,
+          title: item.title,
+          platform: toPlatform(item.contentType),
+          category: item.category,
+          date,
+          thumbnailUrl: item.thumbnailUrl,
+        });
       }
 
-      set({ contentsByDate: { ...get().contentsByDate, ...byDate }, isLoading: false });
+      set({ contentsByDate: byDate, isLoading: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoading: false });
     }
@@ -80,10 +101,40 @@ export const useContentStore = create<ContentState>()((set, get) => ({
   fetchRecommendations: async () => {
     set({ isLoadingRecs: true });
     try {
-      const data = await api.get<{ content: RecommendationEntry[] }>(
-        "/users/me/recommendations?size=10"
-      );
-      set({ recommendations: data.content ?? [], isLoadingRecs: false });
+      const groups = await api.get<Array<{
+        source: {
+          contentId: string;
+          contentType: ContentType;
+          category: string;
+          thumbnailUrl?: string;
+          description: string;
+        };
+        recommendations: Array<{
+          id: number;
+          contentId: string;
+          title: string;
+          contentType: ContentType;
+          thumbnailUrl?: string;
+        }>;
+      }>>("/users/me/recommendations?size=10");
+
+      const mapped: RecommendationEntry[] = (groups ?? []).map((g) => ({
+        source: {
+          contentId: g.source.contentId,
+          contentType: g.source.contentType,
+          category: g.source.category,
+          title: g.source.description,
+          description: g.source.description,
+          thumbnailUrl: g.source.thumbnailUrl,
+        },
+        recommendations: g.recommendations.map((r) => ({
+          contentId: r.contentId,
+          title: r.title,
+          thumbnailUrl: r.thumbnailUrl,
+        })),
+      }));
+
+      set({ recommendations: mapped, isLoadingRecs: false });
     } catch (e) {
       set({ error: (e as Error).message, isLoadingRecs: false });
     }
@@ -91,7 +142,10 @@ export const useContentStore = create<ContentState>()((set, get) => ({
 
   analyzeUrls: async (urls) => {
     await api.post("/analyses", { urls });
-    // 분석 완료 후 목록 갱신
-    await get().fetchAnalyses();
+    await Promise.all([
+      get().fetchAnalyses(),
+      useStatsStore.getState().fetchStats(),
+      get().fetchRecommendations(),
+    ]);
   },
 }));

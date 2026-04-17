@@ -2,23 +2,35 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { handleOAuthCallback } from "@/store/useAuthStore";
+import { handleOAuthCallback, useAuthStore } from "@/store/useAuthStore";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
   const params = useSearchParams();
+  const { loginWithWebOAuth, isNewUser } = useAuthStore();
 
   useEffect(() => {
-    const accessToken  = params.get("accessToken");
+    const code = params.get("code");
+    const provider = params.get("state");
+    const accessToken = params.get("accessToken");
     const refreshToken = params.get("refreshToken");
 
-    if (accessToken && refreshToken) {
+    if (code && provider) {
+      const redirectUri = `${window.location.origin}/auth/callback`;
+      loginWithWebOAuth(provider, code, redirectUri)
+        .then(() => {
+          useAuthStore.getState().isNewUser
+            ? router.replace("/onboarding/url")
+            : router.replace("/home");
+        })
+        .catch(() => router.replace("/login?error=oauth_failed"));
+    } else if (accessToken && refreshToken) {
       handleOAuthCallback(accessToken, refreshToken);
       router.replace("/home");
     } else {
       router.replace("/login");
     }
-  }, [params, router]);
+  }, [params, router, loginWithWebOAuth]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F4F5F7]">

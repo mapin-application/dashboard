@@ -4,7 +4,6 @@ import { api } from "@/lib/api";
 interface CategoryStat {
   category: string;
   count: number;
-  percentage: number;
 }
 
 interface StatsState {

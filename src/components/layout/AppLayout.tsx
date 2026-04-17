@@ -4,12 +4,27 @@ import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
 import { SideNav } from "./SideNav";
 import { useUserStore } from "@/store/useUserStore";
+import { api, getToken, clearTokens } from "@/lib/api";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { name, email } = useUserStore();
+
+  useEffect(() => {
+    if (!getToken()) {
+      router.replace("/login");
+      return;
+    }
+    api.get("/users/me/profile").then(() => {
+      setAuthChecked(true);
+    }).catch(() => {
+      clearTokens();
+      router.replace("/login");
+    });
+  }, [router]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -18,6 +33,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  if (!authChecked) return null;
 
   return (
     <div className="min-h-screen bg-[#F4F5F7]">

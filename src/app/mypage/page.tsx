@@ -49,7 +49,9 @@ export default function MyPage() {
             </div>
             <div className="bg-white rounded-2xl p-4 text-center border border-gray-100">
               <p className="text-xs text-gray-400 mb-1">최다 카테고리</p>
-              <p className="text-base font-black text-[#111827] mt-1">{byCategory[0]?.category}</p>
+              <p className="text-base font-black text-[#111827] mt-1">
+                {byCategory[0]?.category ?? <span className="text-gray-300">—</span>}
+              </p>
             </div>
           </div>
 

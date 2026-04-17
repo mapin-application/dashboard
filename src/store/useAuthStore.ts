@@ -12,6 +12,7 @@ interface AuthState {
   isNewUser: boolean;
   isLoading: boolean;
   init: () => void;
+  loginWithWebOAuth: (provider: string, code: string, redirectUri: string) => Promise<void>;
   loginWithTestToken: (userId?: number) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -24,6 +25,22 @@ export const useAuthStore = create<AuthState>()((set) => ({
   init: () => {
     const token = getToken();
     set({ isAuthenticated: !!token, isLoading: false });
+  },
+
+  loginWithWebOAuth: async (provider, code, redirectUri) => {
+    set({ isLoading: true });
+    try {
+      const data = await api.post<TokenResponse>("/auth/web/login", {
+        provider,
+        code,
+        redirectUri,
+      });
+      setTokens(data.accessToken, data.refreshToken);
+      set({ isAuthenticated: true, isNewUser: data.isNewUser, isLoading: false });
+    } catch (e) {
+      set({ isLoading: false });
+      throw e;
+    }
   },
 
   // 개발용 — test-token 엔드포인트로 바로 로그인
