@@ -1,12 +1,11 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FileText, User } from "lucide-react";
+import { Home, User } from "lucide-react";
 import { clsx } from "clsx";
 
 const navItems = [
   { href: "/home", icon: Home, label: "홈" },
-  { href: "/report", icon: FileText, label: "리포트" },
   { href: "/mypage", icon: User, label: "마이페이지" },
 ];
 
