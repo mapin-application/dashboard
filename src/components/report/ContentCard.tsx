@@ -44,7 +44,7 @@ export function ContentCard({
         const data = await api.get<{
           youtube: OppositionItem[];
           naverNews: OppositionItem[];
-        }>(`/analyses/${id}`);
+        }>(`/users/me/analyses/${id}`);
         setOpposition([...(data.youtube ?? []), ...(data.naverNews ?? [])]);
       } catch {
         setOpposition([]);
