@@ -19,6 +19,7 @@ export interface RecommendItem {
   title: string;
   thumbnailUrl?: string;
   contentType?: string;
+  category?: string;
 }
 
 export interface RecommendationEntry {
@@ -134,6 +135,7 @@ export const useContentStore = create<ContentState>()((set, get) => ({
           title: r.title,
           thumbnailUrl: r.thumbnailUrl,
           contentType: r.contentType,
+          category: r.category,
         })),
       }));
 

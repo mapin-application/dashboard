@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { BubbleChart } from "@/components/home/BubbleChart";
-import { RecommendationCard } from "@/components/home/RecommendationCard";
+import { RecommendItemCard } from "@/components/home/RecommendItemCard";
 import { AddContentModal } from "@/components/layout/AddContentModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useStatsStore } from "@/store/useStatsStore";
@@ -34,10 +34,11 @@ export default function HomePage() {
   const top    = byCategoryWithPct[0];
   const bottom = byCategoryWithPct[byCategoryWithPct.length - 1];
 
-  // YouTube / 뉴스 번갈아 인터리브
-  const balancedRecs = (() => {
-    const yt   = recommendations.filter((r) => r.source.contentType?.toUpperCase() === "YOUTUBE");
-    const news = recommendations.filter((r) => r.source.contentType?.toUpperCase() !== "YOUTUBE");
+  // 추천 아이템 전체 플랫화 후 YouTube / 뉴스 인터리브
+  const balancedItems = (() => {
+    const allItems = recommendations.flatMap((r) => r.recommendations);
+    const yt   = allItems.filter((i) => i.contentType?.toUpperCase() === "YOUTUBE");
+    const news = allItems.filter((i) => i.contentType?.toUpperCase() !== "YOUTUBE");
     const result = [];
     const len = Math.max(yt.length, news.length);
     for (let i = 0; i < len; i++) {
@@ -47,7 +48,7 @@ export default function HomePage() {
     return result;
   })();
 
-  const visibleRecs = showAll ? balancedRecs : balancedRecs.slice(0, 4);
+  const visibleItems = showAll ? balancedItems : balancedItems.slice(0, 4);
 
   return (
     <AppLayout>
@@ -134,20 +135,16 @@ export default function HomePage() {
             맞춤 추천 콘텐츠 <span className="text-[#FF7E64]">✨</span>
           </h2>
           <div className="space-y-3 overflow-y-auto flex-1 min-h-0">
-            {visibleRecs.map((rec) => (
-              <RecommendationCard
-                key={rec.source.contentId}
-                source={rec.source}
-                recommendations={rec.recommendations}
-              />
+            {visibleItems.map((item) => (
+              <RecommendItemCard key={item.contentId} item={item} />
             ))}
           </div>
-          {balancedRecs.length > 4 && (
+          {balancedItems.length > 4 && (
             <button
               onClick={() => setShowAll(!showAll)}
               className="mt-4 flex-shrink-0 w-full py-2.5 rounded-xl border border-gray-200 text-gray-400 text-sm font-medium hover:border-[#FF7E64] hover:text-[#FF7E64] hover:bg-[#FFEFEC] transition-colors"
             >
-              {showAll ? "접기" : `더보기 (${balancedRecs.length - 4}개)`}
+              {showAll ? "접기" : `더보기 (${balancedItems.length - 4}개)`}
             </button>
           )}
         </div>
