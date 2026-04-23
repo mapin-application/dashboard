@@ -33,7 +33,21 @@ export default function HomePage() {
   const byCategoryWithPct = byCategory.map((item) => ({ ...item, percentage: pct(item.count) }));
   const top    = byCategoryWithPct[0];
   const bottom = byCategoryWithPct[byCategoryWithPct.length - 1];
-  const visibleRecs = showAll ? recommendations : recommendations.slice(0, 4);
+
+  // YouTube / 뉴스 번갈아 인터리브
+  const balancedRecs = (() => {
+    const yt   = recommendations.filter((r) => r.source.contentType === "YOUTUBE");
+    const news = recommendations.filter((r) => r.source.contentType !== "YOUTUBE");
+    const result = [];
+    const len = Math.max(yt.length, news.length);
+    for (let i = 0; i < len; i++) {
+      if (i < yt.length)   result.push(yt[i]);
+      if (i < news.length) result.push(news[i]);
+    }
+    return result;
+  })();
+
+  const visibleRecs = showAll ? balancedRecs : balancedRecs.slice(0, 4);
 
   return (
     <AppLayout>
@@ -128,12 +142,12 @@ export default function HomePage() {
               />
             ))}
           </div>
-          {recommendations.length > 4 && (
+          {balancedRecs.length > 4 && (
             <button
               onClick={() => setShowAll(!showAll)}
               className="mt-4 flex-shrink-0 w-full py-2.5 rounded-xl border border-gray-200 text-gray-400 text-sm font-medium hover:border-[#FF7E64] hover:text-[#FF7E64] hover:bg-[#FFEFEC] transition-colors"
             >
-              {showAll ? "접기" : `더보기 (${recommendations.length - 4}개)`}
+              {showAll ? "접기" : `더보기 (${balancedRecs.length - 4}개)`}
             </button>
           )}
         </div>
