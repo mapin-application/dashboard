@@ -36,8 +36,8 @@ export default function HomePage() {
 
   // YouTube / 뉴스 번갈아 인터리브
   const balancedRecs = (() => {
-    const yt   = recommendations.filter((r) => r.source.contentType === "YOUTUBE");
-    const news = recommendations.filter((r) => r.source.contentType !== "YOUTUBE");
+    const yt   = recommendations.filter((r) => r.source.contentType?.toUpperCase() === "YOUTUBE");
+    const news = recommendations.filter((r) => r.source.contentType?.toUpperCase() !== "YOUTUBE");
     const result = [];
     const len = Math.max(yt.length, news.length);
     for (let i = 0; i < len; i++) {

@@ -107,6 +107,7 @@ export const useContentStore = create<ContentState>()((set, get) => ({
           contentId: string;
           contentType: ContentType;
           category: string;
+          title?: string;
           thumbnailUrl?: string;
           description: string;
         };
@@ -124,7 +125,7 @@ export const useContentStore = create<ContentState>()((set, get) => ({
           contentId: g.source.contentId,
           contentType: g.source.contentType,
           category: g.source.category,
-          title: g.source.description,
+          title: g.source.title || g.source.description,
           description: g.source.description,
           thumbnailUrl: g.source.thumbnailUrl,
         },
