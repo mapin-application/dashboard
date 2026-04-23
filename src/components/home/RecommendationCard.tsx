@@ -24,7 +24,7 @@ interface RecommendationCardProps {
 
 export function RecommendationCard({ source, recommendations }: RecommendationCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const [popup, setPopup] = useState<{ contentId: string; isYoutube: boolean; title: string } | null>(null);
+  const [popup, setPopup] = useState<{ contentId: string; isYoutube: boolean; title: string; thumbnailUrl?: string; category?: string } | null>(null);
   const isYoutube = source.contentType === "YOUTUBE";
 
   return (
@@ -34,7 +34,7 @@ export function RecommendationCard({ source, recommendations }: RecommendationCa
         <div className="relative flex gap-3 p-3 pb-4">
           {/* 썸네일 — 클릭 시 팝업 */}
           <button
-            onClick={() => setPopup({ contentId: source.contentId, isYoutube, title: source.title })}
+            onClick={() => setPopup({ contentId: source.contentId, isYoutube, title: source.title, thumbnailUrl: source.thumbnailUrl, category: source.category })}
             className="relative flex-shrink-0 w-20 h-14 rounded-lg overflow-hidden bg-gray-100 group"
           >
             {source.thumbnailUrl ? (
@@ -102,6 +102,8 @@ export function RecommendationCard({ source, recommendations }: RecommendationCa
           contentId={popup.contentId}
           isYoutube={popup.isYoutube}
           title={popup.title}
+          thumbnailUrl={popup.thumbnailUrl}
+          category={popup.category}
           onClose={() => setPopup(null)}
         />
       )}

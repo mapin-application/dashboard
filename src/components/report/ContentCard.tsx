@@ -35,7 +35,7 @@ export function ContentCard({
   const [expanded, setExpanded] = useState(false);
   const [opposition, setOpposition] = useState<OppositionItem[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const [popup, setPopup] = useState<{ contentId: string; isYoutube: boolean; title: string } | null>(null);
+  const [popup, setPopup] = useState<{ contentId: string; isYoutube: boolean; title: string; thumbnailUrl?: string; category?: string } | null>(null);
 
   const handleToggle = async () => {
     if (!expanded && opposition === null) {
@@ -61,7 +61,7 @@ export function ContentCard({
         <div className="relative flex gap-3 p-3 pb-4">
           {/* 썸네일 — 클릭 시 팝업 */}
           <button
-            onClick={() => setPopup({ contentId, isYoutube, title })}
+            onClick={() => setPopup({ contentId, isYoutube, title, thumbnailUrl, category })}
             className="relative flex-shrink-0 w-20 h-14 rounded-lg overflow-hidden bg-gray-100 group"
           >
             {thumbnailUrl ? (
@@ -115,7 +115,7 @@ export function ContentCard({
                 return (
                   <button
                     key={item.contentId}
-                    onClick={() => setPopup({ contentId: item.contentId, isYoutube: itemIsYoutube, title: item.title })}
+                    onClick={() => setPopup({ contentId: item.contentId, isYoutube: itemIsYoutube, title: item.title, thumbnailUrl: item.thumbnailUrl })}
                     className="w-full flex gap-2 px-3 py-2 border-b border-gray-100 last:border-0 hover:bg-gray-100 transition-colors text-left group"
                   >
                     <div className="relative flex-shrink-0 w-12 h-9 rounded overflow-hidden bg-gray-200">
@@ -145,6 +145,8 @@ export function ContentCard({
           contentId={popup.contentId}
           isYoutube={popup.isYoutube}
           title={popup.title}
+          thumbnailUrl={popup.thumbnailUrl}
+          category={popup.category}
           onClose={() => setPopup(null)}
         />
       )}
