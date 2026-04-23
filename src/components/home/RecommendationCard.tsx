@@ -8,6 +8,7 @@ interface RecommendItem {
   contentId: string;
   title: string;
   thumbnailUrl?: string;
+  contentType?: string;
 }
 
 interface RecommendationCardProps {
@@ -77,7 +78,7 @@ export function RecommendationCard({ source, recommendations }: RecommendationCa
             {recommendations.slice(0, 3).map((rec) => (
               <button
                 key={rec.contentId}
-                onClick={() => setPopup({ contentId: rec.contentId, isYoutube: true, title: rec.title })}
+                onClick={() => setPopup({ contentId: rec.contentId, isYoutube: rec.contentType === "YOUTUBE", title: rec.title, thumbnailUrl: rec.thumbnailUrl })}
                 className="w-full flex gap-2 px-3 py-2 border-b border-gray-100 last:border-0 hover:bg-gray-100 transition-colors text-left group"
               >
                 <div className="relative flex-shrink-0 w-12 h-9 rounded overflow-hidden bg-gray-200">
