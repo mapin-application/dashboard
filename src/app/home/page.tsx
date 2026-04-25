@@ -53,7 +53,7 @@ export default function HomePage() {
   return (
     <AppLayout>
       {/* 페이지 헤더 */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 md:mb-8">
         <div>
           <p className="text-sm text-gray-400 mb-0.5">안녕하세요!</p>
           <h1 className="text-2xl font-bold text-[#111827]">{name}님의 콘텐츠 분석</h1>
@@ -76,7 +76,7 @@ export default function HomePage() {
       </div>
 
       {/* 상단 통계 카드 4개 */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
         <div className="bg-white rounded-2xl p-5 border border-gray-100">
           <p className="text-xs text-gray-400 mb-1">전체 콘텐츠</p>
           <p className="text-3xl font-black text-[#111827]">{totalCount}</p>
@@ -100,7 +100,7 @@ export default function HomePage() {
       </div>
 
       {/* 메인 2컬럼 */}
-      <div className="grid grid-cols-[1fr_340px] gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-5 md:gap-6 mb-6 md:mb-8">
         {/* 왼쪽: 버블 차트 + 카테고리 바 */}
         <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -130,7 +130,7 @@ export default function HomePage() {
         </div>
 
         {/* 오른쪽: 추천 콘텐츠 */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col max-h-[700px]">
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col md:max-h-[700px]">
           <h2 className="text-base font-semibold text-[#111827] mb-4 flex-shrink-0">
             맞춤 추천 콘텐츠 <span className="text-[#FF7E64]">✨</span>
           </h2>

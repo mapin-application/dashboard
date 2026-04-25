@@ -19,7 +19,7 @@ export function SideNav() {
 
   return (
     <>
-      <aside className="fixed left-0 top-0 h-screen w-[220px] bg-white border-r border-gray-100 flex flex-col z-50">
+      <aside className="fixed left-0 top-0 h-screen w-[220px] bg-white border-r border-gray-100 hidden md:flex flex-col z-50">
         {/* 로고 */}
         <div className="px-6 py-6 border-b border-gray-50">
           <Logo height={28} />

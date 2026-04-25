@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
 import { SideNav } from "./SideNav";
+import { BottomNav } from "./BottomNav";
 import { useUserStore } from "@/store/useUserStore";
 import { api, getToken, clearTokens } from "@/lib/api";
 
@@ -39,9 +40,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#F4F5F7]">
       <SideNav />
-      <main className="ml-[220px] min-h-screen flex flex-col">
+      <main className="md:ml-[220px] min-h-screen flex flex-col">
         {/* 상단 바 */}
-        <header className="sticky top-0 z-40 bg-[#F4F5F7]/90 backdrop-blur-sm border-b border-gray-200/50 px-8 h-14 flex items-center justify-end">
+        <header className="sticky top-0 z-40 bg-[#F4F5F7]/90 backdrop-blur-sm border-b border-gray-200/50 px-4 md:px-8 h-14 flex items-center justify-end">
           <div className="relative" ref={ref}>
             <button
               onClick={() => setOpen(!open)}
@@ -80,10 +81,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <div className="max-w-[1100px] mx-auto w-full px-8 py-8">
+        <div className="max-w-[1100px] mx-auto w-full px-4 py-5 md:px-8 md:py-8 pb-20 md:pb-8">
           {children}
         </div>
       </main>
+      <div className="md:hidden">
+        <BottomNav />
+      </div>
     </div>
   );
 }

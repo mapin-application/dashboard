@@ -68,7 +68,7 @@ export default function MyPage() {
 
       {/* 프로필 배너 */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
           <div className="w-16 h-16 bg-[#FFEFEC] rounded-full flex items-center justify-center flex-shrink-0">
             <User size={30} className="text-[#FF7E64]" />
           </div>
@@ -83,16 +83,16 @@ export default function MyPage() {
               <ChevronRight size={12} />
             </button>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-center px-5 border-r border-gray-100">
+          <div className="flex items-center gap-0 border-t sm:border-t-0 pt-4 sm:pt-0">
+            <div className="text-center px-4 sm:px-5 border-r border-gray-100">
               <p className="text-2xl font-black text-[#111827]">{totalCount}</p>
               <p className="text-xs text-gray-400 mt-0.5">분석 콘텐츠</p>
             </div>
-            <div className="text-center px-5 border-r border-gray-100">
+            <div className="text-center px-4 sm:px-5 border-r border-gray-100">
               <p className="text-2xl font-black text-[#FF7E64]">{totalSharedCount}</p>
               <p className="text-xs text-[#FF7E64]/70 mt-0.5">공유 URL</p>
             </div>
-            <div className="text-center px-5">
+            <div className="text-center px-4 sm:px-5">
               <p className="text-lg font-black text-[#111827]">
                 {byCategoryWithPct[0]?.category ?? <span className="text-gray-300 text-base">—</span>}
               </p>
@@ -103,7 +103,7 @@ export default function MyPage() {
       </div>
 
       {/* 메인 2컬럼 */}
-      <div className="grid grid-cols-[260px_1fr] gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-5 md:gap-6 mb-6 md:mb-8">
         {/* 왼쪽: 설정 메뉴 */}
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden self-start">
           <button className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-gray-50 transition-colors border-b border-gray-50">
@@ -172,9 +172,9 @@ export default function MyPage() {
       {/* 마이 리포트 */}
       <div className="mt-8">
         <h2 className="text-xl font-bold text-[#111827] mb-4">마이 리포트</h2>
-        <div className="grid grid-cols-[1fr_340px] gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-5 md:gap-6 items-start">
           {/* 달력 */}
-          <div className="bg-white rounded-2xl border border-gray-100 sticky top-[72px] h-[600px] overflow-hidden">
+          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden md:sticky md:top-[72px] md:h-[600px]">
             <Calendar
               selectedMonth={selectedMonth}
               selectedDate={selectedDate}
@@ -185,7 +185,7 @@ export default function MyPage() {
           </div>
 
           {/* 콘텐츠 패널 */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col sticky top-[72px] h-[600px]">
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col md:sticky md:top-[72px] md:h-[600px] min-h-[400px]">
             <div className="flex items-center gap-2 mb-4">
               <h3 className="text-base font-semibold text-[#111827] flex-1">
                 {selectedDate
