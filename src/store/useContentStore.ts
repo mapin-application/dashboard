@@ -118,6 +118,7 @@ export const useContentStore = create<ContentState>()((set, get) => ({
           title: string;
           contentType: ContentType;
           thumbnailUrl?: string;
+          category?: string;
         }>;
       }>>("/users/me/recommendations?size=10");
 
