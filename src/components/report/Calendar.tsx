@@ -38,23 +38,23 @@ export function Calendar({
   while (cells.length < 42) cells.push(null); // 항상 6주
 
   return (
-    <div className="h-full p-8 flex flex-col">
+    <div className="h-full p-4 md:p-6 flex flex-col">
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-3 md:mb-5">
         <button
           onClick={() => onMonthChange(-1)}
-          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+          className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
         >
-          <ChevronLeft size={20} className="text-gray-500" />
+          <ChevronLeft size={18} className="text-gray-500" />
         </button>
-        <span className="text-xl font-bold text-[#111827]">
+        <span className="text-base md:text-xl font-bold text-[#111827]">
           {year}년 {month + 1}월
         </span>
         <button
           onClick={() => onMonthChange(1)}
-          className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+          className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
         >
-          <ChevronRight size={20} className="text-gray-500" />
+          <ChevronRight size={18} className="text-gray-500" />
         </button>
       </div>
 
@@ -64,7 +64,7 @@ export function Calendar({
           <div
             key={day}
             className={clsx(
-              "text-center text-sm font-semibold py-3",
+              "text-center text-xs md:text-sm font-semibold py-1.5 md:py-2",
               i === 0 ? "text-red-400" : i === 6 ? "text-blue-400" : "text-gray-400"
             )}
           >
@@ -76,7 +76,7 @@ export function Calendar({
       {/* 날짜 그리드 */}
       <div className="grid grid-cols-7 flex-1 content-start">
         {cells.map((date, i) => {
-          if (!date) return <div key={`empty-${i}`} className="h-16" />;
+          if (!date) return <div key={`empty-${i}`} className="h-11 md:h-14" />;
 
           const dateStr = toDateString(date);
           const hasContent = datesWithContent.has(dateStr);
@@ -89,7 +89,7 @@ export function Calendar({
               key={dateStr}
               onClick={() => onDateSelect(date)}
               className={clsx(
-                "relative flex flex-col items-center justify-center h-16 rounded-xl text-sm font-medium transition-all",
+                "relative flex flex-col items-center justify-center h-11 md:h-14 rounded-lg md:rounded-xl text-xs md:text-sm font-medium transition-all",
                 isSelected && "bg-[#FF7E64] text-white",
                 !isSelected && isToday && "bg-[#FFEFEC] text-[#FF7E64]",
                 !isSelected && !isToday && "hover:bg-gray-50",

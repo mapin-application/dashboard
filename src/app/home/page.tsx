@@ -77,24 +77,24 @@ export default function HomePage() {
 
       {/* 상단 통계 카드 4개 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-        <div className="bg-white rounded-2xl p-5 border border-gray-100">
+        <div className="bg-white rounded-2xl p-3.5 md:p-5 border border-gray-100">
           <p className="text-xs text-gray-400 mb-1">전체 콘텐츠</p>
-          <p className="text-3xl font-black text-[#111827]">{totalCount}</p>
+          <p className="text-2xl md:text-3xl font-black text-[#111827]">{totalCount}</p>
           <p className="text-xs text-gray-400 mt-1">개 분석됨</p>
         </div>
-        <div className="bg-[#FFEFEC] rounded-2xl p-5">
+        <div className="bg-[#FFEFEC] rounded-2xl p-3.5 md:p-5">
           <p className="text-xs text-[#FF7E64] mb-1">최다 카테고리</p>
-          <p className="text-xl font-black text-[#FF7E64]">{top?.category ?? <span className="text-[#FF7E64]/40">—</span>}</p>
+          <p className="text-base md:text-xl font-black text-[#FF7E64] truncate">{top?.category ?? <span className="text-[#FF7E64]/40">—</span>}</p>
           <p className="text-xs text-[#FF7E64]/70 mt-1">{top ? `${pct(top.count)}% · ${top.count}개` : <span className="text-[#FF7E64]/30 font-bold">데이터 없음</span>}</p>
         </div>
-        <div className="bg-white rounded-2xl p-5 border border-gray-100">
+        <div className="bg-white rounded-2xl p-3.5 md:p-5 border border-gray-100">
           <p className="text-xs text-gray-400 mb-1">최소 카테고리</p>
-          <p className="text-xl font-black text-[#111827]">{bottom?.category ?? <span className="text-gray-300">—</span>}</p>
+          <p className="text-base md:text-xl font-black text-[#111827] truncate">{bottom?.category ?? <span className="text-gray-300">—</span>}</p>
           <p className="text-xs text-gray-400 mt-1">{bottom ? `${pct(bottom.count)}% · ${bottom.count}개` : <span className="text-gray-300 font-bold">데이터 없음</span>}</p>
         </div>
-        <div className="bg-white rounded-2xl p-5 border border-gray-100">
+        <div className="bg-white rounded-2xl p-3.5 md:p-5 border border-gray-100">
           <p className="text-xs text-gray-400 mb-1">공유한 URL</p>
-          <p className="text-3xl font-black text-[#111827]">{totalCount}</p>
+          <p className="text-2xl md:text-3xl font-black text-[#111827]">{totalCount}</p>
           <p className="text-xs text-gray-400 mt-1">개 등록됨</p>
         </div>
       </div>

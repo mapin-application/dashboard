@@ -51,7 +51,7 @@ export function ContentDetailPopup({
         onClick={onClose}
       >
         <div
-          className="w-full max-w-md bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh]"
+          className="w-full max-w-md bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[calc(100dvh-140px)] md:max-h-[80vh]"
           onClick={(e) => e.stopPropagation()}
         >
           {/* 헤더 — 원본 콘텐츠 */}

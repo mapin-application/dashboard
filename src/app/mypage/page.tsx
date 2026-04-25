@@ -174,7 +174,7 @@ export default function MyPage() {
         <h2 className="text-xl font-bold text-[#111827] mb-4">마이 리포트</h2>
         <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-5 md:gap-6 items-start">
           {/* 달력 */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden md:sticky md:top-[72px] md:h-[600px]">
+          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden h-[440px] md:sticky md:top-[72px] md:h-[600px]">
             <Calendar
               selectedMonth={selectedMonth}
               selectedDate={selectedDate}
